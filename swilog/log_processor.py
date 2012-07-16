@@ -15,7 +15,8 @@
 
 import os
 import re
-import hashlib
+import gzip
+import tempfile
 
 class LogProcessor(object):
     """
@@ -32,7 +33,6 @@ class LogProcessor(object):
             self.file_name = config['file_name']
             self.compress = config['compress']
             self.remove = config['remove']
-
         except Exception as e:
             logger.fatal('Failed to initialize LogProcessor')
             exit(-1)
@@ -84,28 +84,32 @@ class LogProcessor(object):
         """
         file_list = self._filter_files()
         for filename, match in file_list.items():
-            # Determine the key name
             key_name = self._determine_key(**match)
             if os.path.getsize(filename) != 0:
-                self.logger.debug("Processing log: %s" % filename)
-                hash = hashlib.md5()
-                # Do we compress
-                already_compressed = True if filename.endswith('.gz') else False
-                if self.compress and not already_compressed:
-                    source_file = gzip.open(filename, 'rb')
-                    for line in source_file:
-                        # filter out bad lines here?
-                        hash.update(line)
+                self.logger.info("Processing log: %s" % filename)
+                tmpfile = ''
+                if self.compress and not filename.endswith('.gz'):
+                    key_name += '.gz'
+                    (fd, tmpfile) = tempfile.mkstemp('.gz')
+                    source_file = open(filename, 'rb')
+                    gzip_file = gzip.open(tmpfile, 'wb')
+                    gzip_file.writelines(source_file)
+                    gzip_file.close()
+                    source_file.close()
+                    source_file = open(tmpfile, 'rb')
                 else:
                     source_file = open(filename, 'rb')
-                hash = hash.hexdigest()
-                # Upload the file
                 self.logger.debug('Uploading %s.' % filename)
-                headers = {'x-object-meta-original-name': filename, 'x-hash': hash }
                 conn.put_object(self.container, key_name, source_file,
                     content_type = 'text/directory',
-                    headers = headers)
-                # Determine if we need to remove the file
+                    headers = {})
+                source_file.close()
                 if self.remove:
-                    self.logger.info("Deleting local copy of %s" % filename)
+                    self.logger.debug("Deleting local copy of %s" % filename)
+                    try:
+                        os.remove(filename)
+                    except Exception as e:
+                        self.logger.error('Exception while trying to delete %s.' % filename)
+                if tmpfile != '':
+                    os.remove(tmpfile)
 
