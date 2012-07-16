@@ -35,7 +35,8 @@ setup(
         'Programming Language :: Python :: 2.6',
         'Environment :: No Input/Output (Daemon)',
         ],
-    install_requires=['python-swiftclient'],
+    keywords = ('backup', 'archive', 'atom', 'rss', 'blog', 'weblog'),
     scripts=['bin/swift-log-uploader.py'],
-    data_files=[('/etc/swilog', ['etc/swilog.conf.sample'])]
+    data_files=[('/etc/swilog', ['etc/swilog.conf.sample'])],
+    requires=['python-swiftclient']
 )
