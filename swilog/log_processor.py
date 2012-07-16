@@ -108,3 +108,4 @@ class LogProcessor(object):
                 # Determine if we need to remove the file
                 if self.remove:
                     self.logger.info("Deleting local copy of %s" % filename)
+
