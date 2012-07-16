@@ -1,0 +1,5 @@
+Swilog (1.0)
+
+  - Initial release
+  - Basic log uploading
+  - No tests, simple logging, no object expiration options
