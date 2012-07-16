@@ -1,0 +1,21 @@
+{
+    "swift_auth": "https://swift.com/auth/v1.0",
+    "swift_user": "swift:user",
+    "swift_password": "supersecret",
+    "logfiles": [
+        {
+            "label": "syslog",
+            "directory": "/var/log/",
+            "file_name": "syslog",
+            "compress": false,
+            "remove": false
+        },
+        {
+            "label": "auth",
+            "directory": "/var/log/",
+            "file_name": "auth",
+            "compress": false,
+            "remove": false
+        }
+    ]
+}
