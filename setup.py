@@ -37,4 +37,5 @@ setup(
         ],
     install_requires=['python-swiftclient'],
     scripts=['bin/swift-log-uploader.py'],
+    data_files=[('/etc/swilog', ['etc/swilog.conf.sample'])]
 )
