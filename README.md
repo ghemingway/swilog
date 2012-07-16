@@ -56,10 +56,10 @@ Here are the options that can be set for each individual log:
     label: Something like "my_syslog".  No default.  Mandatory.
     directory: Something like "/var/log/".  No default.  Mandatory.
     file_name: Something like "syslog".  No default.  Mandatory.
-    compress = See above.  Defaults to global value.
-    remove = See above.  Defaults to global value.
-    lookback_hrs = See above.  Defaults to global value.
-    expire_days = See above.  Defaults to global value.
+    compress: See above.  Defaults to global value.
+    remove: See above.  Defaults to global value.
+    lookback_hrs: See above.  Defaults to global value.
+    expire_days: See above.  Defaults to global value.
 
 
 Swift Object Key Format
@@ -68,6 +68,12 @@ Swift Object Key Format
 The name that is given to each uploaded log file is very configurable.
 
 MORE HERE...
+
+
+Swift Authorization Versions
+============================
+
+Should really talk about v1.0 vs. v2.0 (i.e. Keystone)
 
 
 How to Setup Logs for Hourly Collection

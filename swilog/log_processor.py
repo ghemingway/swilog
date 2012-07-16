@@ -17,6 +17,7 @@ import os
 import re
 import gzip
 import tempfile
+import time
 
 class LogProcessor(object):
     """

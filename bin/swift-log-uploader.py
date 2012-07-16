@@ -56,7 +56,6 @@ def read_configuration(filename):
             global_conf['remove'] = True
         if 'lookback_hrs' not in global_conf:
             global_conf['lookback_hrs'] = 1
-        print global_conf
         return (global_conf, conf['Logfiles'])
     except IOError as e:
         logger.fatal('Configuration file %s could not be opened.  Exiting' % filename)
@@ -92,7 +91,6 @@ if __name__ == '__main__':
             sys.exit(-1)
 
     # Loop through each declared log file and process
-    print logfiles
     for logfile in logfiles:
         log_conf = build_log_config(config, logfile)
         processor = LogProcessor(logger, log_conf)

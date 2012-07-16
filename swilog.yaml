@@ -7,6 +7,6 @@ Global:
     lookback_hrs: 1
 
 Logfiles: [
-    { label: syslog, directory: /Users/ghemingway/Desktop/, file_name: syslog, compress: true, remove: false }
+    { label: nova-api, directory: /Users/ghemingway/Desktop/, file_name: nova-api, compress: true, remove: false }
 ]
 
