@@ -27,6 +27,7 @@ directory.  Customize this one or write your own.  Is is a very simlpe json
 schema described below:
 
 Global Options:
+
     swift_auth: Something like "https://swift.isis.vanderbilt.edu/auth/v1.0".  No default.  Required.
     swift_user: Something like "swift_tenant:account".  No default.  Required.
     swift_password: "supersecretpassword".  No default.  Required.
@@ -38,11 +39,35 @@ Global Options:
     format: See discussion below.  Defaults to ['date','host','label'].
 
 Per Log Options:
+
     label: Something like "my_syslog".  No default.  Mandatory.
     directory: Something like "/var/log/".  No default.  Mandatory.
     file_name: Something like "syslog".  No default.  Mandatory.
     compress = See above.  Defaults to global value.
     remove = See above.  Defaults to global value.
+
+
+How to Setup Logs for Hourly Collection
+=======================================
+
+Here are a couple of examples how this could be used.
+
+*auth.log*
+
+Let'say you want to collect the auth log from your machines every hour.  On Ubuntu by default auth events go through
+rsyslog, so configuring this is pretty easy.  Modify the rsyslog configuration to use an hourly template.  With
+a bit of permissioning you can get it going.
+
+1. Modify /etc/rsyslog.d/50-default.conf
+
+  $template HourlyAuthLog,"/var/log/auth/hourly/%$YEAR%%$MONTH%%$DAY%%$HOUR%"
+  auth,authpriv.*			?HourlyAuthLog
+  auth,authpriv.*			/var/log/auth.log
+
+2. mkdir -p /var/log/auth/hourly
+3. chown -R syslog.adm /var/log/auth
+4. chmod 775 /var/log/auth /var/log/auth/hourly
+5. service rsyslog restart
 
 
 How to Build to Debian Packages

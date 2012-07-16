@@ -27,21 +27,20 @@ import logging.handlers
 logger = logging.getLogger('swilog')
 logger.setLevel(logging.DEBUG)
 if sys.platform == "darwin":
-    address = "/var/run/syslog"
-    handler = logging.handlers.SysLogHandler(address)
-    formatter = logging.Formatter('Swilog: %(message)s')
-    handler.setFormatter(formatter)
+    address = '/var/run/syslog'
 else:
-    address = ('localhost', 514)
-    handler = logging.handlers.SysLogHandler(address)
+    address = '/dev/log'
+handler = logging.handlers.SysLogHandler(address)
+formatter = logging.Formatter('Swilog: %(message)s')
+handler.setFormatter(formatter)
 logger.addHandler(handler)
 
 
 def read_configuration(filename):
     try:
-        json_data = open(filename)
-        data = json.load(json_data)
-        json_data.close()
+        with open(filename) as f:
+            data = json.load(f)
+            f.close()
         if u'hostname' not in data:
             data[u'hostname'] = socket.gethostname()
         if u'create_container' not in data:
