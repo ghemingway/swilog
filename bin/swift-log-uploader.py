@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # Copyright (c) 2012 G. Hemingway
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +13,6 @@
 # implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 
 from swiftclient import Connection, ClientException
 from optparse import OptionParser
