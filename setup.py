@@ -20,15 +20,14 @@ from swilog import __version__ as version
 name = 'swilog'
 
 setup(
-    name=name,
-    version=version,
-    description='Swilog',
-    license='Apache License (2.0)',
-    author='G. Hemingway',
-    author_email='graham.hemingway@gmail.com',
-    url='https://github.com/ghemingway/swilog',
-    packages=find_packages(exclude=['test_swilog', 'bin']),
-    test_suite='nose.collector',
+    name = name,
+    version = version,
+    description = 'Swilog',
+    license = 'Apache License (2.0)',
+    author = 'G. Hemingway',
+    author_email = 'graham.hemingway@gmail.com',
+    url = 'https://github.com/ghemingway/swilog',
+    packages = find_packages(),
     classifiers=[
         'Development Status :: 4 - Beta',
         'License :: OSI Approved :: Apache Software License',
@@ -37,6 +36,5 @@ setup(
         'Environment :: No Input/Output (Daemon)',
         ],
     install_requires=['python-swiftclient'],
-    scripts=['bin/swift-log-uploader'
-            ],
+    scripts=['bin/swift-log-uploader.py'],
 )
