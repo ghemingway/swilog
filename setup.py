@@ -38,5 +38,5 @@ setup(
     keywords = ('backup', 'archive', 'atom', 'rss', 'blog', 'weblog'),
     scripts=['bin/swift-log-uploader.py'],
     data_files=[('/etc/swilog', ['etc/swilog.conf.sample'])],
-    install_requires = ['python-swiftclient']
+    install_requires = ['python-swiftclient','pyyaml']
 )

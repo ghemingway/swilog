@@ -33,6 +33,7 @@ class LogProcessor(object):
             self.file_name = config['file_name']
             self.compress = config['compress']
             self.remove = config['remove']
+            self.lookback_sec = config['lookback_hrs'] * 3600
         except Exception as e:
             logger.fatal('Failed to initialize LogProcessor')
             exit(-1)
@@ -84,8 +85,12 @@ class LogProcessor(object):
         """
         file_list = self._filter_files()
         for filename, match in file_list.items():
-            key_name = self._determine_key(**match)
+            # Process lookback
+            seconds_since_mtime = time.time() - os.stat(filename).st_mtime
+            if seconds_since_mtime < self.lookback_sec:
+                continue
             if os.path.getsize(filename) != 0:
+                key_name = self._determine_key(**match)
                 self.logger.info("Processing log: %s" % filename)
                 tmpfile = ''
                 if self.compress and not filename.endswith('.gz'):

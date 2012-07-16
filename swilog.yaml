@@ -1,0 +1,12 @@
+Global:
+    swift_auth: https://swift.isis.vanderbilt.edu/auth/v1.0
+    swift_user: graham_account:graham
+    swift_password: "@Prado21"
+    hostname: openstack06
+    expire_days: 365
+    lookback_hrs: 1
+
+Logfiles: [
+    { label: syslog, directory: /Users/ghemingway/Desktop/, file_name: syslog, compress: true, remove: false }
+]
+

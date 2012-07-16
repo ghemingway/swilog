@@ -18,7 +18,7 @@ from swiftclient import Connection, ClientException
 from optparse import OptionParser
 import socket
 import sys
-import json
+import yaml
 import time
 from swilog.log_processor import LogProcessor
 import logging
@@ -39,21 +39,25 @@ logger.addHandler(handler)
 def read_configuration(filename):
     try:
         with open(filename) as f:
-            data = json.load(f)
+            conf = yaml.load(f)
             f.close()
-        if u'hostname' not in data:
-            data[u'hostname'] = socket.gethostname()
-        if u'create_container' not in data:
-            data[u'create_container'] = True
-        if u'container' not in data:
-            data[u'container'] = u'logs_raw'
-        if u'format' not in data:
-            data[u'format'] = [u'date',u'host',u'label']
-        if u'compress' not in data:
-            data[u'compress'] = True
-        if u'remove' not in data:
-            data[u'remove'] = True
-        return data
+            global_conf = conf['Global']
+        if 'hostname' not in global_conf:
+            global_conf['hostname'] = socket.gethostname()
+        if 'create_container' not in global_conf:
+            global_conf['create_container'] = True
+        if 'container' not in global_conf:
+            global_conf['container'] = 'logs_raw'
+        if 'format' not in global_conf:
+            global_conf['format'] = ['date','host','label']
+        if 'compress' not in global_conf:
+            global_conf['compress'] = True
+        if 'remove' not in global_conf:
+            global_conf['remove'] = True
+        if 'lookback_hrs' not in global_conf:
+            global_conf['lookback_hrs'] = 1
+        print global_conf
+        return (global_conf, conf['Logfiles'])
     except IOError as e:
         logger.fatal('Configuration file %s could not be opened.  Exiting' % filename)
         sys.exit(-1)
@@ -61,7 +65,6 @@ def read_configuration(filename):
 
 def build_log_config(config, logfile):
     log_config = dict(config.items() + logfile.items())
-    del log_config['logfiles']
     del log_config['swift_auth']
     del log_config['swift_password']
     del log_config['swift_user']
@@ -72,7 +75,7 @@ if __name__ == '__main__':
     parser = OptionParser(version='%prog 1.0', usage='Usage: %prog -c CONFIG_FILE')
     parser.add_option('-c', '--config', dest='config', default='/etc/swilog/swilog.conf', help='Configuration file')
     (options, args) = parser.parse_args(sys.argv[1:])
-    config = read_configuration(options.config)
+    (config, logfiles) = read_configuration(options.config)
     # Star the clock here
     start_time = time.time()
     logger.warn('Initiating log processing.')
@@ -89,7 +92,8 @@ if __name__ == '__main__':
             sys.exit(-1)
 
     # Loop through each declared log file and process
-    for logfile in config['logfiles']:
+    print logfiles
+    for logfile in logfiles:
         log_conf = build_log_config(config, logfile)
         processor = LogProcessor(logger, log_conf)
         processor.process(conn)

@@ -23,10 +23,12 @@ Swilog Configuration
 Customize the Swilog configuration to suit your individual machine's logging
 needs.  The default behavior is for swilog to look for a configuration file
 at /etc/swilog/swilog.conf.  A sample conf is included in the source etc/
-directory.  Customize this one or write your own.  Is is a very simlpe json
+directory.  Customize this one or write your own.  Is is a very simlpe yaml
 schema described below:
 
 Global Options:
+
+    Global:
 
     swift_auth: Something like "https://swift.isis.vanderbilt.edu/auth/v1.0".  No default.  Required.
     swift_user: Something like "swift_tenant:account".  No default.  Required.
@@ -37,14 +39,35 @@ Global Options:
     create_container: true/false.  Should the swift container be created if not already present.  Defaults to true.
     container: Something like "logs_raw".  The name of the container into which all logs are written.  Defaults to "logs_raw".
     format: See discussion below.  Defaults to ['date','host','label'].
+    lookback_hrs: Integer.  How many hours must have passed since the file was last written to.  Defaults to 1.
+    expire_days: Integer.  Mark after how many days the uploaded file will be purged from Swift.  Defaults to infinity.
 
 Per Log Options:
+
+Each log is defined separately, but all are encapsulated within one section, such as:
+
+    Logfiles: [
+        { label: Foo, directory: /var/log/, file_name: foo },
+        { label: Barr, directory: /var/log/bar/, filen_name: bar }
+    ]
+
+Here are the options that can be set for each individual log:
 
     label: Something like "my_syslog".  No default.  Mandatory.
     directory: Something like "/var/log/".  No default.  Mandatory.
     file_name: Something like "syslog".  No default.  Mandatory.
     compress = See above.  Defaults to global value.
     remove = See above.  Defaults to global value.
+    lookback_hrs = See above.  Defaults to global value.
+    expire_days = See above.  Defaults to global value.
+
+
+Swift Object Key Format
+=======================
+
+The name that is given to each uploaded log file is very configurable.
+
+MORE HERE...
 
 
 How to Setup Logs for Hourly Collection
